@@ -1,0 +1,1 @@
+test_array[loc_array] = 255
