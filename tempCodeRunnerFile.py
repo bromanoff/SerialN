@@ -1,1 +1,4 @@
-test_array[loc_array] = 255
+for file in os.listdir("./test"):
+    if file.endswith(".jpg"):
+        img = Image.open(file)
+        img.show()
