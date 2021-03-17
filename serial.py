@@ -5,43 +5,35 @@ import matplotlib.pyplot as plt
 import os
 
 
-# Path to image dir
-path = "/Users/roman/Documents/CodingProjects/100_Days_of_Code/day-81+_Portfolio_Projects/Image_SerialN/test/"
+def stamp(path, serial_start):
+    # Get the monotype font for the serials. Minimum of 12pt recommended
+    font = ImageFont.truetype("PTMono-Regular.ttf", 12)
 
+    # Exception handling
+    try:
+        if any(file.endswith('.jpg') for file in os.listdir(path)):
+            os.mkdir(f"{path}/new")
+        else:
+            return "No .jpg files found in the folder"
+    except FileNotFoundError:
+        return "No folder"
+    except FileExistsError:
+        return "Folder called 'new' already exists"
 
-# Choose font for the serial number
-font = ImageFont.truetype("PTMono-Regular.ttf", 12)
-
-
-# Get the serial number
-def get_serial(start):
-    if start == "last":
+    # Choosing the right starting number
+    if serial_start == "":
         with open("serial.txt") as file:
-            serial = file.read()
-        return int(serial)
+            serial = int(file.read())
     else:
-        serial = start
-        return int(serial)
+        serial = int(serial_start)
 
-
-# Update the txt file to the latest serial number
-def update_serial(num):
-    update = str(num)
-    with open("serial.txt", mode="w") as file:
-        file.write(update)
-    print("serial.txt updated")
-
-
-def stamp_serial():
-    os.mkdir(f"{path}new")
-    serial = get_serial(input("Where would you like to start the serial number? "))
-
+    # Stamp every jpg
     for file in sorted(os.listdir(path)):
         serial_str = str(serial).zfill(5)
         
         if file.endswith(".jpg"):
             # Import image
-            img = Image.open(path + file)
+            img = Image.open(f"{path}/{file}")
             # Create an array from image
             img_array = np.array(img)
             # Create a black canvas with image dimensions
@@ -66,10 +58,12 @@ def stamp_serial():
             # Convert image array into pillow image object
             final_img = Image.fromarray(img_array)
             # Create new dir and saving image
-            final_img.save(f"{path}new/{serial_str}.jpg")
+            final_img.save(f"{path}/new/{serial_str}.jpg")
         
             serial += 1
 
-    return update_serial(serial)
-
-stamp_serial()
+    # Update the serials.txt file to the latest serial number
+    with open("serial.txt", mode="w") as file:
+        file.write(str(serial))
+    print("serial.txt updated")
+    return "Serial images created in folder called 'new'"
