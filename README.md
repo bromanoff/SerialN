@@ -1,7 +1,5 @@
 # SerialN
 
-Welcome to the Serial number stamp
+Stamps a serial number into the pixels of an image in the bottom right corner.
 
-Sorry for the bad UI, I'm working on that.
-
-Works only for b/w images right now. Colored images will be possible soon.
+Works only with b/w images so far.
